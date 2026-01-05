@@ -1,23 +1,20 @@
 package com.codingshuttle.TestingApp.repositories;
 
-import com.codingshuttle.TestingApp.TestContainerConfiguration;
-import com.codingshuttle.TestingApp.dto.EmployeeDto;
 import com.codingshuttle.TestingApp.entities.Employee;
+
+import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
+//import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-@Import(TestContainerConfiguration.class)
 @DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Slf4j
 class EmployeeRepositoryTest {
 
     @Autowired
@@ -26,49 +23,42 @@ class EmployeeRepositoryTest {
     private Employee employee;
 
     @BeforeEach
-    void setUp() {
+    void setup(){
         employee = Employee.builder()
-                .id(1L)
-                .name("Anuj")
-                .email("anuj@gmail.com")
-                .salary(100L)
+                .email("Likhithjsc@gmail.com")
+                .name("Likhith JSC")
+                .salary(10000000L)
                 .build();
     }
 
     @Test
-    void testFindByEmail_whenEmailIsPresent_thenReturnEmployee() {
-//        Arrange, Given
+    void testFindByEmail_whenEmailIsPresent_thenReturnEmployeeList() {
+        //Given
         employeeRepository.save(employee);
 
-//        Act, When
+        //When
         List<Employee> employeeList = employeeRepository.findByEmail(employee.getEmail());
 
-//        Assert, Then
-        assertThat(employeeList).isNotNull();
-        assertThat(employeeList).isNotEmpty();
-        assertThat(employeeList.get(0).getEmail()).isEqualTo(employee.getEmail());
+        //Then
+        Assertions.assertThat(employeeList).isNotNull();
+        Assertions.assertThat(employeeList).isNotEmpty();
+        Assertions.assertThat(employeeList.get(0).getEmail()).isEqualTo(employee.getEmail());
+        log.info("testFindByEmail_whenEmailIsPresent_thenReturnEmployeeList - PASSED");
     }
 
     @Test
     void testFindByEmail_whenEmailIsNotFound_thenReturnEmptyEmployeeList() {
-//        Given
-        String email = "notPresent.123@gmail.com";
-//        When
+        //Given
+        String email = "test@gmail.com";
+
+        //When
         List<Employee> employeeList = employeeRepository.findByEmail(email);
-//        Then
-        assertThat(employeeList).isNotNull();
-        assertThat(employeeList).isEmpty();
+
+        //Then
+        Assertions.assertThat(employeeList).isNotNull();
+        Assertions.assertThat(employeeList).isEmpty();
+        Assertions.assertThat(employeeList.size()).isEqualTo(0);
+        log.info("testFindByEmail_whenEmailIsNotFound_thenReturnEmptyEmployeeList - PASSED");
     }
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
