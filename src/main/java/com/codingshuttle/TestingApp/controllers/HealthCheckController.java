@@ -21,7 +21,6 @@ public class HealthCheckController {
         return ResponseEntity.ok("check");
     }
 
-
     @GetMapping("/env")
     public ResponseEntity<String> getEnv(){
         return ResponseEntity.ok("Application Env: "+myVariable);
